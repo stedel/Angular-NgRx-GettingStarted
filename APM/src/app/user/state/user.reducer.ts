@@ -1,3 +1,7 @@
+export interface UserState {
+  maskUserName: boolean;
+}
+
 export function userReducer(state, action) {
   switch (action.type) {
     case 'TOGGLE_MASK_USERNAME':
