@@ -58,6 +58,10 @@ export function productReducer(state = initialState, action: ProductActions): Pr
           starRating: 0,
         },
       };
+
+    case ProductActionTypes.LoadSuccess:
+      return { ...state, products: action.payload };
+
     default:
       return state;
   }
