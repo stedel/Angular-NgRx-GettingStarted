@@ -4,8 +4,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductService } from '../product.service';
 import { mergeMap, map, catchError } from 'rxjs/operators';
 import * as productActions from './product.actions';
-import { of, Observable } from 'rxjs';
-import { Action } from '@ngrx/store';
+import { of } from 'rxjs';
 
 @Injectable()
 export class ProductEffects {
