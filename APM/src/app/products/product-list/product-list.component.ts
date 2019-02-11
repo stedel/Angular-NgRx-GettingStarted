@@ -7,6 +7,7 @@ import { ProductService } from '../product.service';
 import { Store, select } from '@ngrx/store';
 import * as fromProduct from '../state/product.reducer';
 import * as productActions from '../state/product.actions';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'pm-product-list',
@@ -16,6 +17,7 @@ import * as productActions from '../state/product.actions';
 export class ProductListComponent implements OnInit, OnDestroy {
   pageTitle = 'Products';
   errorMessage: string;
+  componentActive = true;
 
   displayCode: boolean;
 
@@ -29,21 +31,34 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // TODO: Unsubscribe
     this.store
-      .pipe(select(fromProduct.getCurrentProduct))
+      .pipe(
+        select(fromProduct.getCurrentProduct),
+        takeWhile(() => this.componentActive),
+      )
       .subscribe(currentProduct => (this.selectedProduct = currentProduct));
 
     this.store.dispatch(new productActions.Load());
 
     // TODO: Unsubscribe
-    this.store.pipe(select(fromProduct.getProducts)).subscribe(products => (this.products = products));
+    this.store
+      .pipe(
+        select(fromProduct.getProducts),
+        takeWhile(() => this.componentActive),
+      )
+      .subscribe(products => (this.products = products));
 
     // TODO: Unsubscribe
     this.store
-      .pipe(select(fromProduct.getShowProductCode))
+      .pipe(
+        select(fromProduct.getShowProductCode),
+        takeWhile(() => this.componentActive),
+      )
       .subscribe(showProductCode => (this.displayCode = showProductCode));
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.componentActive = false;
+  }
 
   checkChanged(value: boolean): void {
     this.store.dispatch(new productActions.ToggleProductCode(value));
