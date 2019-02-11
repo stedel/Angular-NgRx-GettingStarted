@@ -95,6 +95,13 @@ export function productReducer(state = initialState, action: ProductActions): Pr
     case ProductActionTypes.UpdateProductFail:
       return { ...state, error: action.payload };
 
+    case ProductActionTypes.DeleteProductSuccess:
+      const leftProducts = state.products.filter(item => action.payload !== item.id);
+      return { ...state, products: leftProducts, currentProductId: null, error: '' };
+
+    case ProductActionTypes.DeleteProductFail:
+      return { ...state, error: action.payload };
+
     default:
       return state;
   }
