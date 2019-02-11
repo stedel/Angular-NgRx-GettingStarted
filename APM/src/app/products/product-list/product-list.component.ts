@@ -16,8 +16,8 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class ProductListComponent implements OnInit, OnDestroy {
   pageTitle = 'Products';
-  errorMessage: string;
   componentActive = true;
+  errorMessage$: Observable<string>;
 
   displayCode: boolean;
 
@@ -36,6 +36,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
         takeWhile(() => this.componentActive),
       )
       .subscribe(currentProduct => (this.selectedProduct = currentProduct));
+
+    this.errorMessage$ = this.store.pipe(select(fromProduct.getError));
 
     this.store.dispatch(new productActions.Load());
 
