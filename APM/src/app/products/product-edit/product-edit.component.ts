@@ -11,6 +11,7 @@ import { NumberValidators } from '../../shared/number.validator';
 import { Store, select } from '@ngrx/store';
 import * as fromProduct from '../state/product.reducer';
 import * as productActions from '../state/product.actions';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'pm-product-edit',
@@ -21,6 +22,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   pageTitle = 'Product Edit';
   errorMessage = '';
   productForm: FormGroup;
+  componentActive = true;
 
   product: Product | null;
 
@@ -65,9 +67,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     });
 
     // Watch for changes to the currently selected product
-    // TODO: Unsubscribe
     this.store
-      .pipe(select(fromProduct.getCurrentProduct))
+      .pipe(
+        select(fromProduct.getCurrentProduct),
+        takeWhile(() => this.componentActive),
+      )
       .subscribe(selectedProduct => this.displayProduct(selectedProduct));
 
     // Watch for value changes
@@ -76,7 +80,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.componentActive = false;
+  }
 
   // Also validate on blur
   // Helpful if the user tabs through required fields
