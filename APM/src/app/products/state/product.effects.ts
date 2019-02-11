@@ -45,4 +45,16 @@ export class ProductEffects {
       ),
     ),
   );
+
+  @Effect()
+  createProduct$ = this.actions$.pipe(
+    ofType(productActions.ProductActionTypes.CreateProduct),
+    map((action: productActions.CreateProduct) => action.payload),
+    mergeMap(newProduct =>
+      this.productService.createProduct(newProduct).pipe(
+        map(created => new productActions.CreateProductSuccess(created)),
+        catchError(err => of(new productActions.CreateProductFail(err))),
+      ),
+    ),
+  );
 }
