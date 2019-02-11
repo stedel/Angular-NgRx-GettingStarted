@@ -23,7 +23,7 @@ export class ProductEffects {
   );
 
   @Effect()
-  updateProduct$: Observable<Action> = this.actions$.pipe(
+  updateProduct$ = this.actions$.pipe(
     ofType(productActions.ProductActionTypes.UpdateProduct),
     map((action: productActions.UpdateProduct) => action.payload),
     mergeMap(product =>
